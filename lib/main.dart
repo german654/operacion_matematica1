@@ -1,41 +1,38 @@
-/* Nombre del archivo: main.dart
-* Propósito : Ejercicio 01 Definir una clase abstracta Operacion con métodos matemáticos básicos
-*            e implementarla en una clase derivada para realizar operaciones.
-* Autor: Asistente IA
+/* Nombre del archivo: operacion_matematica.dart
+* Propósito : Ejercicio 02 Realizar una clase operación con los métodos suma, resta y multiplicación.
+*             Después,  extender en una clase derivada.
+* Autor: German
 * Fecha de Modificación: 15 de octubre de 2024
 */
-
 import 'package:flutter/material.dart';
 
-// Clase abstracta Operacion
-abstract class Operacion {
-  double sumar(double a, double b);
-  double restar(double a, double b);
-  double multiplicar(double a, double b);
-}
-
-// Clase derivada Calculadora
-class Calculadora extends Operacion {
-  // método suma
-  @override
+// Definir la clase Operacion
+class Operacion {
+  // Métodos para realizar las operaciones básicas
   double sumar(double a, double b) {
     return a + b;
   }
 
-  // método resta
-  @override
   double restar(double a, double b) {
     return a - b;
   }
 
-  // método multiplicacion
-  @override
   double multiplicar(double a, double b) {
     return a * b;
   }
 }
 
-// Aplicación Flutter
+// Clase derivada que extiende de Operacion
+class CalculadoraAvanzada extends Operacion {
+  // Método adicional para calcular el cociente (división)
+  double dividir(double a, double b) {
+    if (b == 0) {
+      throw Exception('No se puede dividir por cero');
+    }
+    return a / b;
+  }
+}
+
 void main() {
   runApp(MyApp());
 }
@@ -44,7 +41,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Calculadora Flutter',
+      title: 'Calculadora Avanzada',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -59,8 +56,8 @@ class CalculadoraScreen extends StatefulWidget {
 }
 
 class _CalculadoraScreenState extends State<CalculadoraScreen> {
-  // Instancia de la calculadora
-  Calculadora calc = Calculadora();
+  // Instancia de la calculadora avanzada
+  CalculadoraAvanzada calc = CalculadoraAvanzada();
 
   // Controladores para los campos de entrada
   final TextEditingController _num1Controller = TextEditingController();
@@ -93,11 +90,25 @@ class _CalculadoraScreenState extends State<CalculadoraScreen> {
     });
   }
 
+  void _dividir() {
+    double num1 = double.parse(_num1Controller.text);
+    double num2 = double.parse(_num2Controller.text);
+    try {
+      setState(() {
+        _resultado = 'División: ${calc.dividir(num1, num2)}';
+      });
+    } catch (e) {
+      setState(() {
+        _resultado = 'Error: ${e.toString()}';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calculadora en Flutter'),
+        title: Text('Calculadora Avanzada'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -129,6 +140,10 @@ class _CalculadoraScreenState extends State<CalculadoraScreen> {
                 ElevatedButton(
                   onPressed: _multiplicar,
                   child: Text('Multiplicar'),
+                ),
+                ElevatedButton(
+                  onPressed: _dividir,
+                  child: Text('Dividir'),
                 ),
               ],
             ),
